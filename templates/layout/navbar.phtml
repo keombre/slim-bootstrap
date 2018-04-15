@@ -1,0 +1,57 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+    <div class="navbar-header">
+        <?php if ($auth->logged()):?>
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        </button>
+        <?php endif?>
+        <a class="navbar-left" href="<?=$router->pathFor('dashboard')?>">
+            <img style="height: 45px; padding-right: 15px;" src="/img/hades.svg" />
+        </a>
+        <a class="navbar-brand" href="<?=$router->pathFor('dashboard')?>">Hades</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse text-center">
+        <?php if ($auth->logged()):?>
+        <ul class="nav navbar-nav navbar-right">
+        <?php if ($config->getBool("new_reg")):?>
+        <a href="#" onclick="document.getElementById('disable').submit()" class="btn btn-danger navbar-btn">Disable registration</a>
+        <?php else:?>
+        <a href="#" onclick="document.getElementById('enable').submit()" class="btn btn-success navbar-btn">Enable registration</a>
+        <?php endif?>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <span class="glyphicon glyphicon-user"></span>
+            <span><?=$auth->user['name']?></span>
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="#" onclick="document.getElementById('logout').submit()">
+                        <span class="glyphicon glyphicon-log-out"></span> Logout
+                    </a>
+                </li>
+                <li><a href="<?=$router->pathFor('changePassword')?>"><span class="glyphicon glyphicon-lock"></span> Change password</a></li>
+                <li role="presentation" class="divider"></li>
+                <li><a href="<?=$router->pathFor('manageUsers')?>"><span class="glyphicon glyphicon-briefcase"></span> Manage users</a></li>
+                <li><a href="<?=$router->pathFor('register')?>"><span class="glyphicon glyphicon-plus"></span> Register new user</a></li>
+            </ul>
+        </li>
+        </ul>
+        <form action="<?=$router->pathFor('logout')?>" method="post" id="logout"></form>
+        <?php endif?>
+    </div>
+    </div>
+</nav>
+<form method="post" class="form" action="<?=$router->pathFor('config', ['key' => 'disableReg'])?>" id="disable">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+</form>
+<form method="post" class="form" action="<?=$router->pathFor('config', ['key' => 'enableReg'])?>" id="enable">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+</form>

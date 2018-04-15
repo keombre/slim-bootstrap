@@ -1,0 +1,53 @@
+<?php require __dir__."/../layout/app.phtml"?>
+
+<div class="container">
+<div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-primary">
+    <div class="panel-heading"><strong>System information</strong></div>
+    <div class="panel-body">
+    <form method="post" class="form-horizontal">
+        <input type="hidden" name="_METHOD" value="PUT" />
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <div class="form-group">
+            <label class="col-md-4 control-label">UID:</label>
+            <p class="col-md-6 form-control-static"><code><?=implode("</code><br><code>", str_split($info['uid'], 32))?></code></p>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="name">Name:</label>
+            <div class="col-md-6">
+                <strong><input class="form-control" type="text" name="name" id="name" value="<?=$info['name']?>" required></strong>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="group">Belongs to group:</label>
+            <div class="col-md-6">
+                <select name="group" class="form-control" id="group">
+                <?php foreach($groups as $group):?>
+                <?php if ($group['id'] == $info['category']):?>
+                    <option value='<?=$group['id']?>' selected><?=$group['name']?></option>
+                <?php else:?>
+                    <option value='<?=$group['id']?>'><?=$group['name']?></option>
+                <?php endif?>
+                <?php endforeach?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="wiki">DokuWiki:</label>
+            <div class="col-md-6">
+                <input class="form-control" type="text" name="wiki" id="wiki" value="<?=$info['wikilink']?>">
+            </div>
+        </div>
+        <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <input class="btn btn-primary" type="submit" value="Update">
+            <a href="#" onclick="document.getElementById('delete').submit()" class="pull-right text-danger">Remove machine</a>
+        </div>
+    </div>
+</form>
+<form method="post" class="form-horizontal" action="<?=$router->pathFor('system', ['id' => $info['id']])?>" id="delete">
+    <input type="hidden" name="_METHOD" value="DELETE" />
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+</form>

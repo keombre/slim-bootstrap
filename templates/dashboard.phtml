@@ -1,0 +1,73 @@
+<?php require __dir__."/layout/app.phtml"?>
+
+<div class="container">
+<div class="col-md-6 col-md-offset-3">
+    <?php /*
+    <button class="btn btn-success btn-lg center-block">Enable registration</button>
+    <hr>
+    */?>
+    <div class="panel panel-primary">
+    <div class="panel-heading"><strong>Pending approval</strong></div>
+    <div class="panel-body">
+    <?php if (is_array($pending) && count($pending)):?>
+        <div class='list-group'>
+        <?php foreach($pending as $pc):?>
+            <li class='list-group-item'>
+            <h4 class='list-group-item-heading'>
+                <a href='<?=$router->pathFor('approve', ['id' => $pc['id']])?>'>
+                    <?=strlen($pc['name']) ? $pc['name'] : "unknown"?>
+                </a><br />
+                <small>
+                    UID: <code><?=strlen($pc['uid'])>31?substr($pc['uid'],0,29)."...":$pc['uid']?></code>
+                </small>
+            </h4>
+            </li>
+        <?php endforeach?>
+        </div>
+    <?php else:?>
+        <span class='text-muted'>None</span>
+    <?php endif?>
+    </div>
+    </div>
+    <div class="panel panel-default">
+    <div class="panel-heading"><strong>Systems</strong></div>
+    <div class="panel-body">
+    <?php if(is_array($approved) && count($approved)):?>
+        <ul class='list-group'>
+        <?php foreach($approved as $ap):?>
+            <li class='list-group-item'>
+                <h4 class='list-group-item-heading'>
+                <?php if (strlen($ap['wikilink'])):?>
+                    <a href='<?=$ap['wikilink']?>' class='btn btn-default pull-right btn-xs'>DokuWiki</a>
+                <?php endif?>
+                    <a href='<?=$router->pathFor("system", ["id" => $ap['id']])?>'><?=$ap['name']?></a><br />
+                    <small>
+                        UID: <code><?=strlen($ap['uid'])>31?substr($ap['uid'],0,29)."...":$ap['uid']?></code>
+                    </small>
+                </h4>
+                <p class='list-group-item-text'>
+                    Group: <strong><?=$categories[$ap['category']]['name']?></strong><br />
+                    Last active: <strong><?=date('d. m. Y H:i:s',  $ap['lastActive'])?></strong>
+                </p>
+            </li>
+        <?php endforeach?>
+        </ul>
+    <?php else:?>
+        <span class='text-muted'>None</span>
+    <?php endif?>
+    </div>
+    </div>
+    <div class="panel panel-default">
+    <div class="panel-heading"><strong>Groups</strong></div>
+    <div class="panel-body">
+        <div class='list-group'>
+        <?php foreach ($categories as $id => $group):?>
+            <a class='list-group-item' href='<?=$router->pathFor("group", ["id" => $id])?>'><?=$group['name']?></a>
+        <?php endforeach?>
+        </div>
+        <a href="<?=$router->pathFor("group", ["id" => "new"])?>">Create new group</a>
+    </div>
+    </div>
+</div>
+</div>
+</div>

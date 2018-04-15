@@ -1,0 +1,77 @@
+<?php require __dir__."/../layout/app.phtml"?>
+
+<div class="container">
+<div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+    <div class="panel-heading"><strong>Group information</div>
+    <div class="panel-body">
+    <form method="post" class="form-horizontal" action="<?=$router->pathFor('group', ['id' => $info['id']])?>">
+        <input type="hidden" name="_METHOD" value="PUT" />
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <div class="form-group">
+            <div class="col-md-4 text-right">
+                <p class="lead form-control-static" id="name"><?=$info['name']?></p>
+            </div>
+        </div>
+        <?php if ($info['id'] == "new"):?>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="name">Group name:</label>
+            <div class="col-md-6">
+                <strong><input class="form-control" type="text" name="name" id="name" required autofocus></strong>
+            </div>
+        </div>
+        <?php endif?>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="config">Config:</label>
+            <div class="col-md-6">
+                <select name="config" class="form-control" id="config">
+                <?php foreach($configs as $file):?>
+                <?php if ($file['name'] == $info['config']):?>
+                    <option value='<?=$file['name']?>' selected><?=$file['name']?></option>
+                    <?php $current = $file?>
+                <?php else:?>
+                    <option value='<?=$file['name']?>'><?=$file['name']?></option>
+                <?php endif?>
+                <?php endforeach?>
+                </select>
+            </div>
+        </div>
+        <?php if ($info['id'] != "new"):?>
+        <?php if (!isset($current)):?>
+        <div class="form-group">
+            <div class="col-md-6 col-md-offset-4">
+                <p class="text-danger">Current config not found!<br /><small>Serving Default instead</small></p>
+            </div>
+        </div>
+        <?php else:?>
+        <div class="form-group">
+            <div class="col-md-6 col-md-offset-4">
+            <a href="<?=$current['html_url']?>" target="_blank">View current config</a>
+            </div>
+        </div>
+        <?php endif?>
+        <?php endif?>
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2" style="margin-top: 5px;">
+            <?php if ($info['id'] != "new"):?>
+                <input class="btn btn-primary" type="submit" value="Update">
+                <?php if ($info['id'] != 0):?>
+                <a href="#" onclick="document.getElementById('delete').submit()" class="pull-right text-danger">Remove group</a>
+                <?php endif?>
+            <?php else:?>
+                <input class="btn btn-primary" type="submit" value="Create">
+            <?php endif?>
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>
+    </div>
+    <form method="post" class="form-horizontal" action="<?=$router->pathFor('group', ['id' => $info['id']])?>" id="delete">
+        <input type="hidden" name="_METHOD" value="DELETE" />
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    </form>
+</div>
+</div>
