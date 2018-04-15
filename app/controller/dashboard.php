@@ -13,22 +13,24 @@ class dashboard {
     }
 
     function __invoke($request, $response, $args) {
-        $pending    = $this->container->db->select("systems", "*", ["approved" => false]);
-        $approved   = $this->container->db->select("systems", "*", ["approved" => true]);
-        $categories = [];
+        
+        // tidy db
+        $this->container->db->delete("currentState", [
+            "chtime[<]" => strtotime('yesterday midnight')
+        ]);
 
-        foreach ($this->container->db->select("categories", "*") as $cat) {
-            $categories[$cat['id']] = [
-                "name" => $cat['name'],
-                "config" => $cat['config']
-            ];
-        }
+        $active = $this->container->db->select('currentState', '*', ["mode" => 'login']);
+
+        $raw = $this->container->db->select('audits', '*', [
+            "ORDER" => ["chtime" => "DESC"],
+	        "LIMIT" => 50
+        ]);
 
         $response = $this->sendResponse($request, $response, "dashboard.phtml", [
-            "pending"    => $pending,
-            "approved"   => $approved,
-            "categories" => $categories
+            "raw"    => $raw,
+            "active"   => $active
         ]);
+        
         return $response;
     }
 }

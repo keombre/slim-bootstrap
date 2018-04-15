@@ -14,7 +14,7 @@ class seed {
 
     function update() {
         if (!$this->container->db->has("sqlite_master", ["AND" => ["type" => "table", "OR" => [
-            "name" => ["users", "audits"]
+            "name" => ["users", "audits", "currentState"]
         ]]])) {
             $this->seed();
         }
@@ -40,6 +40,14 @@ class seed {
         }
 
         $this->db->query("CREATE TABLE IF NOT EXISTS audits (
+            id INTEGER PRIMARY KEY,
+            uname TEXT,
+            station TEXT,
+            mode TEXT,
+            chtime INTEGER
+        );");
+
+        $this->db->query("CREATE TABLE IF NOT EXISTS currentState (
             id INTEGER PRIMARY KEY,
             uname TEXT,
             station TEXT,

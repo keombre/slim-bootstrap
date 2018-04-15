@@ -2,7 +2,7 @@
 
 namespace controller;
 
-final class api_login {
+final class api {
     
     protected $container;
     protected $token;
@@ -23,6 +23,28 @@ final class api_login {
             "mode" => $mode,
             "chtime" => time()
         ]);
+
+        if ($this->container->db->has('currentState', ["uname" => $uname, "station" => $station])) {
+            $this->container->db->update("currentState", [
+                    "uname" => $uname,
+                    "station" => $station,
+                    "mode" => $mode,
+                    "chtime" => time()
+                ], [
+                    "AND" => [
+                        "uname" => $uname,
+                        "station" => $station
+                    ]
+                ]
+            );
+        } else {
+            $this->container->db->insert("currentState", [
+                "uname" => $uname,
+                "station" => $station,
+                "mode" => $mode,
+                "chtime" => time()
+            ]);
+        }
 
         return $response->withJson(["ok"]);
 

@@ -9,19 +9,11 @@
         <span class="icon-bar"></span>
         </button>
         <?php endif?>
-        <a class="navbar-left" href="<?=$router->pathFor('dashboard')?>">
-            <img style="height: 45px; padding-right: 15px;" src="/img/hades.svg" />
-        </a>
-        <a class="navbar-brand" href="<?=$router->pathFor('dashboard')?>">Hades</a>
+        <a class="navbar-brand" href="<?=$router->pathFor('dashboard')?>">Audit</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse text-center">
         <?php if ($auth->logged()):?>
         <ul class="nav navbar-nav navbar-right">
-        <?php if ($config->getBool("new_reg")):?>
-        <a href="#" onclick="document.getElementById('disable').submit()" class="btn btn-danger navbar-btn">Disable registration</a>
-        <?php else:?>
-        <a href="#" onclick="document.getElementById('enable').submit()" class="btn btn-success navbar-btn">Enable registration</a>
-        <?php endif?>
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span class="glyphicon glyphicon-user"></span>
@@ -45,13 +37,3 @@
     </div>
     </div>
 </nav>
-<form method="post" class="form" action="<?=$router->pathFor('config', ['key' => 'disableReg'])?>" id="disable">
-    <input type="hidden" name="_METHOD" value="PUT" />
-    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
-    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
-</form>
-<form method="post" class="form" action="<?=$router->pathFor('config', ['key' => 'enableReg'])?>" id="enable">
-    <input type="hidden" name="_METHOD" value="PUT" />
-    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
-    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
-</form>
